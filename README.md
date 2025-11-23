@@ -222,9 +222,79 @@ This demonstrates strategic leadership in test design and resolution of operatio
 R
 
 
-## Sprint 3
+🚀 Sprint 3 – Development & Simulation Execution
 
+Sprint 3 marked the transition from test design to software implementation, integrating the equivalence class strategy defined in earlier stages into a working simulation. The main objective of this sprint was to validate banking input fields programmatically and execute representative test scenarios to verify expected outcomes.
 
+The deliverable of this sprint was a Java-based validation engine capable of processing five essential input fields:
+
+Bank code
+
+Branch code
+
+Account number
+
+Personal key (PIN)
+
+Order value (operation type)
+
+These validation rules were implemented according to the equivalence partitions and test cases created during Sprints 1 and 2, ensuring full traceability from requirements → test design → execution.
+
+🧠 Core Features Implemented
+
+The Java simulation developed in this sprint performs:
+
+Field-by-field validation using equivalence class partitions
+
+Identification of valid vs. invalid inputs
+
+Success path with confirmation messages
+
+Error path with detailed validation feedback for each field
+
+Execution of three automated representative scenarios and interactive manual testing mode
+
+The final simulation allows both repeatable regression testing and exploratory validation, supporting long-term maintainability and scalability.
+
+📌 Automated Scenarios Executed
+
+Upon launch, the program automatically runs three predefined test cases derived from Sprint 2:
+
+ID	Scenario Type	Expected Outcome
+TC01	Valid operation (checkbook)	SUCCESS — transaction accepted
+TC02	Boundary values (account statement)	SUCCESS — transaction accepted
+TC03	Invalid bank code (000)	ERROR — validation messages displayed
+
+Each execution prints:
+
+Input data received
+
+Validation results per field
+
+Success or failure trace
+
+🖥️ Interactive Validation Mode
+
+After automated execution, the simulation enters interactive input mode, allowing users to manually enter combinations of valid/invalid values for hands-on exploratory testing.
+Typing exit in place of bank code terminates the session gracefully.
+
+🔁 Alignment With the QA Strategy
+
+The deliverables of Sprint 3 demonstrate full alignment with the project roadmap:
+
+Sprint Stage	Outcome
+Sprint 1	Designed equivalence classes per input field
+Sprint 2	Constructed 12 detailed test cases mapped to equivalence partitions
+Sprint 3	Implemented a validation engine and executed representative scenarios
+
+This ensures end-to-end traceability between analysis → design → execution, strengthening both testing completeness and communication with stakeholders.
+
+📂 Files Delivered in Sprint 3
+File	Description
+BankingSimulation.java	Full Java simulation with validation engine and automated/interactive testing
+README_Sprint3.txt	User documentation explaining compilation, execution, rules and test behavior
+
+📎 The Sprint 3 README confirms compilation and execution details, validation criteria, and best practices obtained during implementation 
 
 # 📌 QUOTE — BANKING INPUT VALIDATION & QA PROJECT
 
@@ -311,6 +381,86 @@ Evidence-based execution enables straightforward onboarding of new contributors.
 The testing logic can be integrated into automated pipelines as the system grows.
 
 This scalability ensures that the validation framework will continue supporting the evolution of the banking application as new services, modules, or user flows are introduced.
+
+
+🔒 Security Considerations
+
+Security is a core element of any financial software environment, and this project incorporates foundational safeguards aligned with best practices in digital banking validation. The testing and validation architecture contributes to operational security by preventing the execution of transactions with malformed, incomplete, or unauthorized inputs.
+
+Key contributions to security include:
+
+Strict numeric and length validation to prevent malformed transaction identifiers and account structures.
+
+PIN (personal key) format enforcement to ensure that authentication credentials comply with banking requirements.
+
+Prevention of unauthorized operations by allowing only valid transaction types (checkbook request or account statement).
+
+Error isolation — invalid inputs do not trigger downstream operations, reducing the risk of system misuse.
+
+Traceability of failures through clear error reporting, supporting fast forensic analysis and mitigation.
+
+While this project focuses on input validation, its design facilitates future extensions such as:
+
+Encryption of sensitive data at rest and in transit
+
+Multi-factor authentication
+
+Integration with intrusion-detection and audit-logging systems
+
+The current validation engine therefore acts as a secure foundation that protects system integrity while allowing scalable security growth.
+
+⚠️ Risk Assessment
+
+The validation and QA framework addresses several risks commonly associated with online transactional systems. Below is a summary of the most relevant risks and how the project mitigates them:
+
+Risk	Impact	Mitigation Applied
+Invalid input causing incorrect transactions	High	Equivalence class validation prevents malformed or incomplete submissions
+Weak PIN formats enabling unauthorized access	High	PIN validation enforces format and digit length
+Execution of unsupported transaction types	Medium	Order value restricted only to valid codes (1 or 2)
+Data inconsistency across releases	Medium	Reusable test suite guarantees regression testing
+Loss of traceability	Low	Test cases and validation rules are fully documented
+
+Future risks that the system can scale to mitigate include:
+
+High-volume performance degradation
+
+Authentication breaches
+
+API misuse if integrated with third-party systems
+
+The testing framework ensures that risk controls evolve proportionally with system capabilities.
+
+🧩 QA Architecture Diagram
+
+Below is a conceptual representation of the architecture followed in the project, showing how validation logic, test cases, and simulation execution interact:
+
+              ┌──────────────────────────────┐
+              │   Input Data (User/System)   │
+              └───────────────┬──────────────┘
+                              │
+                              ▼
+              ┌──────────────────────────────┐
+              │     Validation Rules Engine   │
+              │  ─ bank code                  │
+              │  ─ branch code                │
+              │  ─ account number             │
+              │  ─ personal key               │
+              │  ─ order value                │
+              └───────────────┬──────────────┘
+                              │
+                     ┌────────┴────────┐
+                     │   Valid Input    │
+                     │  (All checks OK) │
+                     ▼                 ▼
+         ┌──────────────────┐   ┌──────────────────────┐
+         │  SUCCESS PATH    │   │    ERROR PATH         │
+         │  Transaction OK  │   │  Field-specific msg   │
+         │  Confirmation msg│   │  No transaction       │
+         └──────────────────┘   └──────────────────────┘
+
+        
+> This project demonstrates a complete QA lifecycle, from test-strategy design to automated validation and evidence-based delivery, reflecting industry-ready standards for banking software testing.
+
 
 Prepared by: Luis David Gutierrez Martinez & Leonel Campos Valdes
 Digital NAO – Software Quality Challenge

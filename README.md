@@ -222,5 +222,95 @@ This demonstrates strategic leadership in test design and resolution of operatio
 R
 
 
+## Sprint 3
+
+
+
+# 📌 QUOTE — BANKING INPUT VALIDATION & QA PROJECT
+
+**QA Engineering — Validation Framework & Java Simulation**  
+**Client:** Leonel Campos  
+**Project:** Banking App — Equivalence Class Testing & Validation System  
+**Date:** 23/11/2025  
+**Quote No.:** 06
+
+---
+
+## 🧾 Cost Breakdown
+
+| Sprint | Concept | Description | Cost (USD) |
+|--------|---------|-------------|------------|
+| **Sprint 1** | **Test Strategy Foundation** | Requirements analysis, definition of business rules and input standards for banking fields (bank code, branch code, account number, personal key, order value). | **$350** |
+|  | **Equivalence Class Design** | Valid/invalid/boundary value matrices with representative examples per field. | **$400** |
+|  | **Executive Documentation** | Professional PDF presentation for stakeholders — tables, justifications, graphical structure. | **$250** |
+| **Sprint 2** | **Test Scenario Engineering** | Construction of realistic operational scenarios (typical + edge cases). | **$350** |
+|  | **12 Detailed Test Cases** | Structured test-case design with expected behavior and risk-mitigation approach. | **$450** |
+|  | **Excel Evidence Report** | Test case register with validity mapping and traceability to equivalence classes. | **$300** |
+| **Sprint 3** | **Java Simulation Development** | Implementation of validation logic based on equivalence classes using Java (input simulator, error handling, and operation result engine). | **$650** |
+|  | **Execution Evidence & README** | Execution of predefined scenarios (valid, boundary, invalid), full README documentation for reproducibility. | **$350** |
+| **Final Delivery** | **Complete Academic / Executive Integration** | Final PDF report with analysis, results, impact + MP4 video presentation with narrative and demonstration. | **$600** |
+
+---
+
+### 💰 Subtotal: **$3,700**  
+### 🧾 VAT (16%): **$592**  
+### 🔥 TOTAL: **$4,292**
+
+---
+
+## 📌 Payment Terms
+
+- 50% deposit at project start, 50% upon final delivery.  
+- Validity of this quote: **15 business days.**
+
+---
+
+## 📌 Conditions
+
+- This quote does not include changes beyond the initially agreed scope.  
+- Adjustments requested after delivery will be quoted separately.  
+- Delivery dates may vary depending on complexity and new requirements.  
+- Professional documentation, validated test cases, and fully executed code are guaranteed.
+
+---
+
+# 🌱 Sustainability of the Project
+
+The solution implemented in this project was designed with long-term sustainability in mind. The testing framework is based on equivalence class partitioning, which minimizes redundancy by reducing the number of test cases while maintaining maximum coverage. This allows the QA team to validate future changes in the banking application without having to redesign the entire testing matrix.
+
+In addition, the Java validation simulation provides a reusable asset that can be continuously extended with new validation rules, business requirements, or product features. The modular implementation ensures that future updates—such as new transaction types, additional security validations, or new data entry fields—can be incorporated without breaking the existing structure.
+
+Overall, the project promotes sustainable software quality practices by:
+
+Reducing the time and effort needed for future validation cycles.
+
+Encouraging documentation-driven and evidence-based development.
+
+Providing reusable assets that do not require redesign for every iteration.
+
+This sustainable approach ensures that the application can evolve while preserving operational reliability and minimizing maintenance costs.
+
+# 🚀 Scalability of the Project
+
+The architecture of the project supports scalability both in technical growth and functional expansion. Because the system separates input validation logic from user interaction and simulation execution, new functionalities can be integrated without affecting the core validation engine.
+
+Scalability is achieved through:
+
+Modular validation rules: Each field is validated independently, enabling new business rules or banking services to be added with minimal refactoring.
+
+Extendable test scenarios: New test cases can be incorporated into the framework without altering existing ones, supporting incremental testing for future releases.
+
+Reusable simulation engine: The Java simulator can be expanded to handle REST input, database storage, automated test runs, or CI/CD interaction, scaling from academic simulation to professional automation.
+
+From an organizational standpoint, the project enables scalability in the QA process because:
+
+Test documentation acts as a single source of truth for future teams.
+
+Evidence-based execution enables straightforward onboarding of new contributors.
+
+The testing logic can be integrated into automated pipelines as the system grows.
+
+This scalability ensures that the validation framework will continue supporting the evolution of the banking application as new services, modules, or user flows are introduced.
+
 Prepared by: Luis David Gutierrez Martinez & Leonel Campos Valdes
 Digital NAO – Software Quality Challenge

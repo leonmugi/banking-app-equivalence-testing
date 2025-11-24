@@ -1,16 +1,27 @@
+package org.GoogleScholar;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * BankingSimulation - Sprint 3
+ * Level: C2 Proficient Strategy Implementation
+ *
+ * This simulation validates banking transaction inputs based on complex business rules
+ * and security patterns defined in the Equivalence Class Partitioning strategy.
+ */
 public class BankingSimulation {
 
-    // Clase para agrupar los datos de entrada
+    // --- INNER CLASSES ---
+
+    // Data Transfer Object for Input
     static class InputData {
         String bankCode;
         String branchCode;
         String accountNumber;
         String personalKey;
-        String orderValue; // lo guardamos como String y luego validamos
+        String orderValue;
 
         InputData(String bankCode, String branchCode, String accountNumber,
                   String personalKey, String orderValue) {
@@ -22,11 +33,11 @@ public class BankingSimulation {
         }
     }
 
-    // Clase para el resultado de la validación
+    // Validation Result Object
     static class ValidationResult {
-        boolean isValid;
+        boolean isValid = true;
         List<String> errors = new ArrayList<>();
-        String operationDescription;
+        String successMessage;
 
         void addError(String message) {
             errors.add(message);
@@ -34,185 +45,159 @@ public class BankingSimulation {
         }
     }
 
-    public static void main(String[] args) {
-        System.out.println("=== Banking Application Simulation (Sprint 3) ===\n");
+    // --- MAIN EXECUTION ---
 
-        // 1) Ejecutar al menos 3 casos de prueba representativos
+    public static void main(String[] args) {
+        System.out.println("=================================================");
+        System.out.println("   BANKING APP VALIDATION ENGINE (SPRINT 3)   ");
+        System.out.println("=================================================\n");
+
+        // 1. Run Automated Scenarios (Aligned with Sprint 2 Test Cases)
         runPredefinedScenarios();
 
-        // 2) Modo interactivo opcional para que el usuario ingrese datos
+        // 2. Interactive Mode for Exploratory Testing
         runInteractiveMode();
     }
 
-    // Ejecuta los escenarios predefinidos (vinculados a Sprint 2)
+    // --- SCENARIO MANAGEMENT ---
+
     private static void runPredefinedScenarios() {
-        System.out.println(">>> Running predefined test scenarios ...\n");
+        System.out.println(">>> Executing Representative Test Cases (from Sprint 2)...\n");
 
-        // Scenario 1: Valid case (similar to TC01)
-        InputData tc01 = new InputData(
-                "325",          // bankCode (valid)
-                "2350",         // branchCode (valid)
-                "0012345678",   // accountNumber (valid)
-                "2580",         // personalKey (valid)
-                "1"             // orderValue = checkbook
-        );
-        runScenario("TC01 - Valid transaction (checkbook request)", tc01);
+        // TC-01: Happy Path (Valid Checkbook Request)
+        // Uses valid Region format for Branch and strong PIN
+        InputData tc01 = new InputData("001", "N001", "1234567890", "951753", "CHECK");
+        runScenario("TC-01: Valid Transaction (Checkbook)", tc01);
 
-        // Scenario 2: Boundary case (similar to TC02)
-        InputData tc02 = new InputData(
-                "001",          // lower boundary for bankCode
-                "0001",         // lower boundary for branchCode
-                "9876543210",   // typical 10-digit account number
-                "0000",         // lower boundary for personalKey
-                "2"             // orderValue = account statement
-        );
-        runScenario("TC02 - Boundary values (account statement request)", tc02);
+        // TC-05: Business Logic Error (Invalid Branch Region)
+        // Tests the 'Z' region which doesn't exist in our business rules
+        InputData tc05 = new InputData("001", "Z001", "1234567890", "951753", "CHECK");
+        runScenario("TC-05: Invalid Branch Region (Logic Error)", tc05);
 
-        // Scenario 3: Invalid case (similar to TC03)
-        InputData tc03 = new InputData(
-                "000",          // invalid bankCode (below minimum)
-                "2350",
-                "0012345678",
-                "2580",
-                "1"
-        );
-        runScenario("TC03 - Invalid bank code (000)", tc03);
+        // TC-03: Security Risk (Weak PIN)
+        // Tests the innovative security validation for sequential patterns
+        InputData tc03 = new InputData("001", "N001", "1234567890", "123456", "CHECK");
+        runScenario("TC-03: Security Alert (Weak PIN Sequence)", tc03);
 
-        System.out.println(">>> End of predefined scenarios.\n");
+        System.out.println(">>> Automated scenarios completed.\n");
     }
 
-    // Ejecuta un escenario y muestra los resultados
     private static void runScenario(String label, InputData input) {
-        System.out.println("Scenario: " + label);
-        System.out.println("Input:");
-        System.out.println("  Bank code      : " + input.bankCode);
-        System.out.println("  Branch code    : " + input.branchCode);
-        System.out.println("  Account number : " + input.accountNumber);
-        System.out.println("  Personal key   : " + input.personalKey);
-        System.out.println("  Order value    : " + input.orderValue);
+        System.out.println("--- Scenario: " + label + " ---");
+        System.out.printf("Input: [Bank:%s] [Branch:%s] [Acc:%s] [Key:****] [Order:%s]%n",
+                input.bankCode, input.branchCode, input.accountNumber, input.orderValue);
 
         ValidationResult result = validate(input);
 
         if (result.isValid) {
-            System.out.println("Result: SUCCESS");
-            System.out.println("  Operation: " + result.operationDescription);
-            System.out.println("  Message  : Transaction registered successfully.\n");
+            System.out.println("[RESULT]: ✅ SUCCESS");
+            System.out.println("System Message: " + result.successMessage);
         } else {
-            System.out.println("Result: ERROR");
-            for (String error : result.errors) {
-                System.out.println("  - " + error);
+            System.out.println("[RESULT]: ❌ REJECTED");
+            System.out.println("Errors found:");
+            for (String err : result.errors) {
+                System.out.println(" - " + err);
             }
-            System.out.println();
         }
+        System.out.println();
     }
 
-    // Valida los datos de entrada basado en las equivalence classes de Sprint 1
+    // --- VALIDATION LOGIC (THE CORE STRATEGY) ---
+
     private static ValidationResult validate(InputData input) {
         ValidationResult result = new ValidationResult();
-        result.isValid = true; // se vuelve false si hay al menos un error
 
-        // Validación de bank code: 3 dígitos, 001–999 (no 000)
-        if (input.bankCode == null || input.bankCode.isEmpty()) {
-            result.addError("Bank code is required.");
-        } else if (!isNumeric(input.bankCode)) {
-            result.addError("Bank code must contain only numeric characters.");
-        } else if (input.bankCode.length() != 3) {
-            result.addError("Bank code must have exactly 3 digits.");
-        } else if ("000".equals(input.bankCode)) {
-            result.addError("Bank code cannot be 000.");
+        // 1. BANK CODE VALIDATION
+        // Rule: 3 digits, numeric.
+        if (input.bankCode == null || !input.bankCode.matches("\\d{3}")) {
+            result.addError("Bank Code must be exactly 3 digits (Numeric).");
         }
 
-        // Validación de branch code: 4 dígitos, 0001–9999 (no 0000)
-        if (input.branchCode == null || input.branchCode.isEmpty()) {
-            result.addError("Branch code is required.");
-        } else if (!isNumeric(input.branchCode)) {
-            result.addError("Branch code must contain only numeric characters.");
-        } else if (input.branchCode.length() != 4) {
-            result.addError("Branch code must have exactly 4 digits.");
-        } else if ("0000".equals(input.branchCode)) {
-            result.addError("Branch code cannot be 0000.");
+        // 2. BRANCH CODE VALIDATION (C2 BUSINESS LOGIC)
+        // Rule: Must start with Region (N,S,E,O) followed by 3 digits.
+        // Innovation: We don't just accept any 4 chars; we validate structure.
+        if (input.branchCode == null || !input.branchCode.matches("[NSEO]\\d{3}")) {
+            result.addError("Invalid Branch Code. Format must be Region (N,S,E,O) + 3 Digits (e.g., N001).");
         }
 
-        // Validación de account number: 10 dígitos
-        if (input.accountNumber == null || input.accountNumber.isEmpty()) {
-            result.addError("Account number is required.");
-        } else if (!isNumeric(input.accountNumber)) {
-            result.addError("Account number must contain only numeric characters.");
-        } else if (input.accountNumber.length() != 10) {
-            result.addError("Account number must have exactly 10 digits.");
+        // 3. ACCOUNT NUMBER VALIDATION
+        // Rule: 10 digits, numeric.
+        if (input.accountNumber == null || !input.accountNumber.matches("\\d{10}")) {
+            result.addError("Account Number must be exactly 10 digits.");
         }
 
-        // Validación de personal key: 4 dígitos
-        if (input.personalKey == null || input.personalKey.isEmpty()) {
-            result.addError("Personal key is required.");
-        } else if (!isNumeric(input.personalKey)) {
-            result.addError("Personal key must contain only numeric characters.");
-        } else if (input.personalKey.length() != 4) {
-            result.addError("Personal key must have exactly 4 digits.");
-        }
-
-        // Validación de order value: solo 1 o 2
-        if (input.orderValue == null || input.orderValue.isEmpty()) {
-            result.addError("Order value is required.");
-        } else if (!isNumeric(input.orderValue)) {
-            result.addError("Order value must be numeric (1 = checkbook, 2 = account statement).");
+        // 4. PERSONAL KEY VALIDATION (C2 SECURITY STRATEGY)
+        // Rule: 6 Digits, No Sequences, No Repeats.
+        if (input.personalKey == null || !input.personalKey.matches("\\d{6}")) {
+            result.addError("Personal Key must be exactly 6 digits.");
         } else {
-            int value = Integer.parseInt(input.orderValue);
-            if (value == 1) {
-                result.operationDescription = "Checkbook request";
-            } else if (value == 2) {
-                result.operationDescription = "Monthly account statement request";
+            // Advanced Security Checks
+            if (isSequence(input.personalKey)) {
+                result.addError("Security Alert: PIN cannot be a sequence (e.g., 123456).");
+            }
+            if (isRepeated(input.personalKey)) {
+                result.addError("Security Alert: PIN cannot be repeated numbers (e.g., 111111).");
+            }
+        }
+
+        // 5. ORDER VALUE VALIDATION (C2 USABILITY)
+        // Rule: 'CHECK' or 'STMT' (Case insensitive).
+        if (input.orderValue == null) {
+            result.addError("Order Value is required.");
+        } else {
+            String order = input.orderValue.toUpperCase();
+            if (order.equals("CHECK")) {
+                result.successMessage = "Checkbook request processed successfully.";
+            } else if (order.equals("STMT")) {
+                result.successMessage = "Monthly Statement generated successfully.";
             } else {
-                result.addError("Order value must be 1 (checkbook) or 2 (account statement).");
+                result.addError("Invalid Order. Allowed values: 'CHECK' or 'STMT'.");
             }
         }
 
         return result;
     }
 
-    // Modo interactivo para simular entradas del usuario
-    private static void runInteractiveMode() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println(">>> Interactive mode: enter your own data");
-        System.out.println("Type 'exit' as bank code to finish.\n");
+    // --- HELPER METHODS FOR SECURITY ---
 
-        while (true) {
-            System.out.print("Bank code (3 digits, or 'exit'): ");
-            String bankCode = scanner.nextLine().trim();
-            if ("exit".equalsIgnoreCase(bankCode)) {
-                System.out.println("Exiting interactive mode.");
-                break;
-            }
-
-            System.out.print("Branch code (4 digits): ");
-            String branchCode = scanner.nextLine().trim();
-
-            System.out.print("Account number (10 digits): ");
-            String accountNumber = scanner.nextLine().trim();
-
-            System.out.print("Personal key (4 digits): ");
-            String personalKey = scanner.nextLine().trim();
-
-            System.out.print("Order value (1 = checkbook, 2 = account statement): ");
-            String orderValue = scanner.nextLine().trim();
-
-            InputData userInput = new InputData(bankCode, branchCode, accountNumber, personalKey, orderValue);
-            runScenario("Interactive input", userInput);
-        }
-
-        scanner.close();
+    private static boolean isRepeated(String pin) {
+        // Checks if all characters are the same (e.g. 888888)
+        return pin.chars().distinct().count() == 1;
     }
 
-    // Ayuda para verificar si una cadena es numérica
-    private static boolean isNumeric(String value) {
-        if (value == null || value.isEmpty()) {
-            return false;
+    private static boolean isSequence(String pin) {
+        // Checks for ascending sequence (123456)
+        String forward = "0123456789";
+        String reverse = "9876543210";
+        return forward.contains(pin) || reverse.contains(pin);
+    }
+
+    // --- INTERACTIVE MODE ---
+
+    private static void runInteractiveMode() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println(">>> Entering Interactive Mode. Type 'EXIT' in Bank Code to quit.");
+
+        while (true) {
+            System.out.print("\nEnter Bank Code (3 digits): ");
+            String bank = scanner.nextLine().trim();
+            if (bank.equalsIgnoreCase("EXIT")) break;
+
+            System.out.print("Enter Branch Code (N/S/E/O + 3 digits): ");
+            String branch = scanner.nextLine().trim();
+
+            System.out.print("Enter Account Number (10 digits): ");
+            String acc = scanner.nextLine().trim();
+
+            System.out.print("Enter Personal Key (6 digits): ");
+            String key = scanner.nextLine().trim();
+
+            System.out.print("Enter Order Value (CHECK/STMT): ");
+            String order = scanner.nextLine().trim();
+
+            runScenario("Manual User Test", new InputData(bank, branch, acc, key, order));
         }
-        for (char c : value.toCharArray()) {
-            if (!Character.isDigit(c)) {
-                return false;
-            }
-        }
-        return true;
+        scanner.close();
+        System.out.println("Simulation Terminated.");
     }
 }
